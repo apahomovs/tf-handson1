@@ -1,5 +1,5 @@
 #create vpc:
-resource "aws_vpc" "vpc" {
+resource "aws_vpc" "vpc_id" {
   cidr_block = "10.0.0.0/24"
   tags = {
     Name = "handson_1"
@@ -9,7 +9,7 @@ resource "aws_vpc" "vpc" {
 #create 2 public subnets:
 
 resource "aws_subnet" "public_1a" {
-  vpc_id                  = aws_vpc.vpc.id
+  vpc_id                  = aws_vpc.vpc_id.id
   cidr_block              = "10.0.0.0/26"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
@@ -19,7 +19,7 @@ resource "aws_subnet" "public_1a" {
 }
 
 resource "aws_subnet" "public_1b" {
-  vpc_id                  = aws_vpc.vpc.id
+  vpc_id                  = aws_vpc.vpc_id.id
   cidr_block              = "10.0.0.64/26"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = true
@@ -31,7 +31,7 @@ resource "aws_subnet" "public_1b" {
 #create 2 private subnets: 
 
 resource "aws_subnet" "private_1a" {
-  vpc_id                  = aws_vpc.vpc.id
+  vpc_id                  = aws_vpc.vpc_id.id
   cidr_block              = "10.0.0.128/26"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = false
@@ -40,7 +40,7 @@ resource "aws_subnet" "private_1a" {
   }
 }
 resource "aws_subnet" "private_1b" {
-  vpc_id                  = aws_vpc.vpc.id
+  vpc_id                  = aws_vpc.vpc_id.id
   cidr_block              = "10.0.0.192/26"
   availability_zone       = "us-east-1b"
   map_public_ip_on_launch = false
@@ -51,7 +51,7 @@ resource "aws_subnet" "private_1b" {
 
 #create igw:
 resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc_id.id
 
   tags = {
     Name = "handson1"
@@ -81,7 +81,7 @@ resource "aws_eip" "eip" {
 #public route table:
 
 resource "aws_route_table" "pub_rt" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc_id.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -103,7 +103,7 @@ resource "aws_route_table_association" "public_1b_assoc" {
 
 #private route table:
 resource "aws_route_table" "priv_rt" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc_id.id
 
   route {
     cidr_block     = "0.0.0.0/0"
@@ -129,7 +129,7 @@ resource "aws_route_table_association" "private_1b_assoc" {
 resource "aws_security_group" "sgrp_handson1" {
   name        = "handson1_sgrp"
   description = "Allow SSH and HTTP inbound traffic"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = aws_vpc.vpc_id.id
 
   ingress {
     from_port   = 22
